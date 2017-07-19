@@ -68,7 +68,8 @@ public class Player : MonoBehaviour
     void animationMovement(float anim_int)
     {
         float movimentHorizontal = Input.GetAxis("Horizontal");
-        float movimentVertical = Input.GetAxis("Vertical");
+        //per ora tienilo
+        //float movimentVertical = Input.GetAxis("Vertical");
 
 
 

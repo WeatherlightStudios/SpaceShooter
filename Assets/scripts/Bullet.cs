@@ -16,7 +16,8 @@ public class Bullet : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        //per ora tienilo, può servire
+        //Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
 
 
