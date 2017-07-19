@@ -23,6 +23,9 @@ public class Enemy : MonoBehaviour {
         public float closeObjective;
         [System.NonSerialized]
         public bool listFinished = false;
+
+        [Range(0, 10)]
+        public float lerpSpeed;
     }
     public CustomPoints customP;
     
@@ -83,7 +86,7 @@ public class Enemy : MonoBehaviour {
             float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
             //transform.rotation = Quaternion.Euler(0, 0, angle);
 
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, angle), Time.deltaTime * 5.0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, angle), Time.deltaTime * customP.lerpSpeed);
         }
     }
 
