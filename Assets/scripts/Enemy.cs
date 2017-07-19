@@ -4,74 +4,88 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 	
-
+    public enum PatternType{StraightDown, CustomPoints}
+    public PatternType patTypes;
 
     public float speed;
-    public Vector3[] patternPoints;
-    public LayerMask enemiesLayerMask;
-    public float radius;
     public float rotSpeed;
 
-    int objectiveNumb;
-    float closeObjective;
-    bool listFinished = false;
+    [System.Serializable]
+    public class CustomPoints
+    {
+        public Vector3[] patternPoints;
+        public LayerMask enemiesLayerMask;
+        public float radius;
 
+        [System.NonSerialized]
+        public int objectiveNumb;
+        [System.NonSerialized]
+        public float closeObjective;
+        [System.NonSerialized]
+        public bool listFinished = false;
+    }
+    public CustomPoints customP;
+    
+    
+    //inizializzazione
     void Start()
     {
-        objectiveNumb = 0;
+        customP.objectiveNumb = 0;
     }
 
     void Update ()
     {
-
-
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
-
-        Vector2 pos = transform.position;
-
-        
-        Vector3 _pos = transform.localPosition;
-
-        
+        //continua a muoversi in avanti
         transform.position = transform.position + transform.up * speed * Time.deltaTime;
-
-
-        Vector3 currentDir = transform.forward;
-        Vector3 objDir = patternPoints[objectiveNumb] - transform.position;
-        float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
-
-
-       
-
-        if (Physics2D.OverlapCircle(patternPoints[objectiveNumb], radius, enemiesLayerMask))
+        
+        //tipologia movimento = punti custom
+        if(patTypes == PatternType.CustomPoints)
         {
-            if(objectiveNumb != patternPoints.Length - 1)
-            {
-                objectiveNumb++;
-            }
-            else
-            {
-                listFinished = true;
-            }
+            CustomPointsType();
+        }
+        if(patTypes == PatternType.StraightDown)
+        {
+            StraightDownType();
         }
 
-        if (!listFinished)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, angle);
-        }
-
+        //distruzione se esce dal bordo sotto
+        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         if (transform.position.y < min.y)
         {
             Destroy(gameObject);
         }
     }
-
-    private void LateUpdate()
+    
+    void StraightDownType()
     {
-        
+
     }
 
+    void CustomPointsType()
+    {
+        //controllo raggiunta obbiettivo
+        if (Physics2D.OverlapCircle(customP.patternPoints[customP.objectiveNumb], customP.radius, customP.enemiesLayerMask))
+        {
+            if (customP.objectiveNumb != customP.patternPoints.Length - 1)
+            {
+                customP.objectiveNumb++;
+            }
+            else
+            {
+                customP.listFinished = true;
+            }
+        }
 
+        //quando ha completato lista obbiettivi continua dritto, altrimenti ruota verso obbiettivo
+        if (!customP.listFinished)
+        {
+            Vector3 objDir = customP.patternPoints[customP.objectiveNumb] - transform.position;
+            float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+    }
+
+    //distruzione proiettile e bersaglio quando colpito
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player_bullet")
@@ -81,22 +95,36 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-
+    //visualizzazione
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        for (int i = 0; i < patternPoints.Length; i++)
+        if(patTypes == PatternType.CustomPoints)
         {
-            Gizmos.DrawSphere(patternPoints[i], 0.5f);
-
-            if (i < patternPoints.Length - 1)
-            {
-                Gizmos.DrawLine(patternPoints[i], patternPoints[i + 1]);
-            }
+            VisualyzeCustomPointsMode();
         }
+    }
 
-        Vector3 objDir = patternPoints[objectiveNumb] - transform.position;
-        objDir.z = 0;
-        Gizmos.DrawLine(transform.position, transform.position + objDir);
+    //visualizzazione modalità punti custom
+    void VisualyzeCustomPointsMode()
+    {
+        if (customP.patternPoints.Length > 0)
+        {
+            Gizmos.color = Color.green;
+            for (int i = 0; i < customP.patternPoints.Length; i++)
+            {
+                Gizmos.DrawSphere(customP.patternPoints[i], 0.5f);
+
+                if (i < customP.patternPoints.Length - 1)
+                {
+                    Gizmos.DrawLine(customP.patternPoints[i], customP.patternPoints[i + 1]);
+                }
+            }
+
+            Vector3 objDir = customP.patternPoints[customP.objectiveNumb] - transform.position;
+            objDir.z = 0;
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, transform.position + objDir);
+        }
     }
 }
