@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
         float movimentVertical = Input.GetAxisRaw("Vertical");
 
 
-        Vector2 moviment = new Vector2(movimentHorizontal, movimentVertical);
+        Vector2 movement = new Vector2(movimentHorizontal, movimentVertical);
 
 
 
@@ -43,8 +43,8 @@ public class Player : MonoBehaviour
 
 
 
-        Move(moviment);
-        animationMoviment(anim_move);
+        Move(movement);
+        animationMovement(anim_move);
     }
 
 
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour
         transform.position = pos;
     }
 
-    void animationMoviment(float anim_int)
+    void animationMovement(float anim_int)
     {
         float movimentHorizontal = Input.GetAxis("Horizontal");
         float movimentVertical = Input.GetAxis("Vertical");
