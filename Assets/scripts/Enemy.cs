@@ -81,7 +81,9 @@ public class Enemy : MonoBehaviour {
         {
             Vector3 objDir = customP.patternPoints[customP.objectiveNumb] - transform.position;
             float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            //transform.rotation = Quaternion.Euler(0, 0, angle);
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, angle), Time.deltaTime * 5.0f);
         }
     }
 
