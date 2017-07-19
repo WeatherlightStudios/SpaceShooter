@@ -3,14 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
-	void Start () {
-		
-	}
+	
 
 
     public float speed;
+    public Vector3[] patternPoints;
+    public LayerMask enemiesLayerMask;
+    public float radius;
+    public float rotSpeed;
 
-	void Update ()
+    int objectiveNumb;
+    float closeObjective;
+    bool listFinished = false;
+
+    void Start()
+    {
+        objectiveNumb = 0;
+    }
+
+    void Update ()
     {
 
 
@@ -18,18 +29,46 @@ public class Enemy : MonoBehaviour {
 
         Vector2 pos = transform.position;
 
+        
+        Vector3 _pos = transform.localPosition;
+
+        
+        transform.position = transform.position + transform.up * speed * Time.deltaTime;
 
 
-        pos = new Vector2(pos.x, pos.y + speed * Time.deltaTime);
+        Vector3 currentDir = transform.forward;
+        Vector3 objDir = patternPoints[objectiveNumb] - transform.position;
+        float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
 
-        transform.position = pos;
+
+       
+
+        if (Physics2D.OverlapCircle(patternPoints[objectiveNumb], radius, enemiesLayerMask))
+        {
+            if(objectiveNumb != patternPoints.Length - 1)
+            {
+                objectiveNumb++;
+            }
+            else
+            {
+                listFinished = true;
+            }
+        }
+
+        if (!listFinished)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
 
         if (transform.position.y < min.y)
         {
             Destroy(gameObject);
         }
-        // Debug.Log("Trigger");
+    }
 
+    private void LateUpdate()
+    {
+        
     }
 
 
@@ -40,6 +79,24 @@ public class Enemy : MonoBehaviour {
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
-        
+    }
+
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        for (int i = 0; i < patternPoints.Length; i++)
+        {
+            Gizmos.DrawSphere(patternPoints[i], 0.5f);
+
+            if (i < patternPoints.Length - 1)
+            {
+                Gizmos.DrawLine(patternPoints[i], patternPoints[i + 1]);
+            }
+        }
+
+        Vector3 objDir = patternPoints[objectiveNumb] - transform.position;
+        objDir.z = 0;
+        Gizmos.DrawLine(transform.position, transform.position + objDir);
     }
 }
