@@ -36,6 +36,10 @@ public class Enemy : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player_bullet")
+        {
+            Destroy(other.gameObject);
             Destroy(gameObject);
+        }
+        
     }
 }
