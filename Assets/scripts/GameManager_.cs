@@ -14,7 +14,7 @@ public class GameManager_ : MonoBehaviour
 
     public int score;
 
-
+    public float yAdjuster;
 
 
     
@@ -22,7 +22,7 @@ public class GameManager_ : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        InvokeRepeating("spown_enemy", 5.0f, 1.0f);
+        InvokeRepeating("spawn_enemy", 5.0f, 1.0f);
 	}
 	
 	// Update is called once per frame
@@ -34,12 +34,12 @@ public class GameManager_ : MonoBehaviour
 
 
 
-    void spown_enemy()
+    void spawn_enemy()
     {
         GameObject obj = Instantiate(enemy);
 
         Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
-        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
+        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1)) + Vector3.up * yAdjuster;
 
 
         obj.transform.position = new Vector2(Random.Range(min.x, max.x), max.y);

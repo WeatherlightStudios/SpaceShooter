@@ -8,11 +8,31 @@ public class Player : MonoBehaviour
     public float speed;
     public float anim_move;
 
-    public GameObject spown_shoot;
-    public GameObject bullet;
+    
+    [System.Serializable]
+    public class CustomizeBullets
+    {
+        public GameObject spawn_shoot;
+        public GameObject bullet;
 
-    public float fireRate = 0.0f;
-    float nextFire = 0.0f;
+        public float fireRate = 0.0f;
+        [Range(1,5)]
+        public int bulletNumber;
+        [Range(0f,3f)]
+        public float bulletDistance;
+        [Range(0f,45f)]
+        public float bulletAngle;
+
+        [System.NonSerialized]
+        public float nextFire = 0.0f;
+
+        [System.NonSerialized]
+        public float currentAngle;
+
+        [System.NonSerialized]
+        public float currentDistance;
+    }
+    public CustomizeBullets bullets;
 
 
 
@@ -32,12 +52,31 @@ public class Player : MonoBehaviour
 
 
 
-        if(Input.GetButton("Jump") && Time.time > nextFire)
+        if(Input.GetButton("Jump") && Time.time > bullets.nextFire)
         {
-            nextFire = Time.time + fireRate;
+            bullets.nextFire = Time.time + bullets.fireRate;
 
-            GameObject m_bullet = Instantiate(bullet);
-            m_bullet.transform.position = spown_shoot.transform.position;
+            
+            //la distanza minima da cui partire è distanza fra ogni proiettile per ogni proiettile - 1 /2 partendo da sinistra
+            bullets.currentDistance = bullets.bulletDistance * (bullets.bulletNumber - 1) / 2;
+
+            //l'angolo da cui partire è angolo fra ogni proiettile per ogni proiettile - 1 / 2 partendo da sinistra
+            bullets.currentAngle = bullets.bulletAngle * (bullets.bulletNumber - 1) / 2;
+
+            for (int i = 0; i < bullets.bulletNumber; i++)
+            {
+                Vector3 bulletPos = bullets.spawn_shoot.transform.position - Vector3.left * bullets.currentDistance;
+                //Quaternion bulletRot = bullets.bullet.transform.rotation
+                GameObject m_bullet = Instantiate(bullets.bullet, bulletPos, transform.rotation);
+                m_bullet.transform.Rotate(Vector3.forward * bullets.currentAngle * -1 ); //* Mathf.Deg2Rad
+
+
+                bullets.currentDistance -= bullets.bulletDistance;
+                bullets.currentAngle -= bullets.bulletAngle;
+                //m_bullet.transform.position = bullets.spawn_shoot.transform.position;
+            }
+
+            
 
         }
 
@@ -79,4 +118,6 @@ public class Player : MonoBehaviour
 
         transform.rotation = pos;
     }
+
+    
 }

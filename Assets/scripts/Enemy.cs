@@ -9,6 +9,10 @@ public class Enemy : MonoBehaviour {
 
     public float speed;
     public float rotSpeed;
+    [Range(0,100)]
+    public int dropPercent;
+    public float yAdjuster;
+    public GameObject[] powerUps;
 
     [System.Serializable]
     public class CustomPoints
@@ -52,7 +56,7 @@ public class Enemy : MonoBehaviour {
         }
 
         //distruzione se esce dal bordo sotto
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)) + Vector3.up * yAdjuster;
         if (transform.position.y < min.y)
         {
             Destroy(gameObject);
@@ -95,6 +99,14 @@ public class Enemy : MonoBehaviour {
     {
         if (other.tag == "Player_bullet")
         {
+            int randomNumb = Random.Range(0, 100);
+
+            if(randomNumb < dropPercent)
+            {
+                int randomObject = Random.Range(0, powerUps.Length - 1);
+                Instantiate(powerUps[randomObject], transform.position, transform.rotation);
+            }
+
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
