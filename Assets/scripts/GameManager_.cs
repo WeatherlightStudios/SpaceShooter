@@ -22,7 +22,7 @@ public class GameManager_ : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-        InvokeRepeating("spawn_enemy", 5.0f, 1.0f);
+        //InvokeRepeating("spawn_enemy", 5.0f, 1.0f);
 	}
 	
 	// Update is called once per frame
