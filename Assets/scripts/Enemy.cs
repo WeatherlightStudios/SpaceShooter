@@ -15,32 +15,33 @@ public class Enemy : MonoBehaviour {
     public GameObject[] powerUps;
 
     [System.Serializable]
-    public class CustomPoints
+    public struct CustomPoints
     {
         public Vector3[] patternPoints;
         public LayerMask enemiesLayerMask;
         public float radius;
 
-        [System.NonSerialized]
-        public int objectiveNumb;
-        [System.NonSerialized]
-        public float closeObjective;
-        [System.NonSerialized]
-        public bool listFinished = false;
+
+        
 
         [Range(0, 10)]
         public float lerpSpeed;
     }
     public CustomPoints customP;
+
     
+    private int objectiveNumb;
     
+    private bool listFinished;
+
     //inizializzazione
-    void Start()
+    private void Start()
     {
-        customP.objectiveNumb = 0;
+        listFinished = false;
+        objectiveNumb = 0;
     }
 
-    void Update ()
+    private void Update ()
     {
         //continua a muoversi in avanti
         transform.position = transform.position + transform.up * speed * Time.deltaTime;
@@ -68,25 +69,25 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    void CustomPointsType()
+    private void CustomPointsType()
     {
         //controllo raggiunta obbiettivo
-        if (Physics2D.OverlapCircle(customP.patternPoints[customP.objectiveNumb], customP.radius, customP.enemiesLayerMask))
+        if (Physics2D.OverlapCircle(customP.patternPoints[objectiveNumb], customP.radius, customP.enemiesLayerMask))
         {
-            if (customP.objectiveNumb != customP.patternPoints.Length - 1)
+            if (objectiveNumb != customP.patternPoints.Length - 1)
             {
-                customP.objectiveNumb++;
+                objectiveNumb++;
             }
             else
             {
-                customP.listFinished = true;
+                listFinished = true;
             }
         }
 
         //quando ha completato lista obbiettivi continua dritto, altrimenti ruota verso obbiettivo
-        if (!customP.listFinished)
+        if (!listFinished)
         {
-            Vector3 objDir = customP.patternPoints[customP.objectiveNumb] - transform.position;
+            Vector3 objDir = customP.patternPoints[objectiveNumb] - transform.position;
             float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
             //transform.rotation = Quaternion.Euler(0, 0, angle);
 
@@ -113,7 +114,7 @@ public class Enemy : MonoBehaviour {
     }
 
     //visualizzazione
-    void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected()
     {
         if(patTypes == PatternType.CustomPoints)
         {
@@ -122,7 +123,7 @@ public class Enemy : MonoBehaviour {
     }
 
     //visualizzazione modalità punti custom
-    void VisualyzeCustomPointsMode()
+    private void VisualyzeCustomPointsMode()
     {
         if (customP.patternPoints.Length > 0)
         {
@@ -137,7 +138,7 @@ public class Enemy : MonoBehaviour {
                 }
             }
 
-            Vector3 objDir = customP.patternPoints[customP.objectiveNumb] - transform.position;
+            Vector3 objDir = customP.patternPoints[objectiveNumb] - transform.position;
             objDir.z = 0;
 
             Gizmos.color = Color.cyan;
