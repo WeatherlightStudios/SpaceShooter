@@ -2,9 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour {
+[System.Serializable]
+public struct CustomPathPoints
+{
+    public Vector3[] patternPathPoints;
+    public LayerMask enemiesLayerMask;
+    public float radius;
+
+
+        
+
+    [Range(0, 10)]
+    public float lerpSpeed;
+}
+public class Enemy : MonoBehaviour
+{
 	
-    public enum PatternType{StraightDown, CustomPoints}
+    public enum PatternType{StraightDown, CustomPathPoints}
     public PatternType patTypes;
 
     public float speed;
@@ -14,21 +28,9 @@ public class Enemy : MonoBehaviour {
     public float yAdjuster;
     public GameObject[] powerUps;
 
-    [System.Serializable]
-    public struct CustomPoints
-    {
-        public Vector3[] patternPoints;
-        public LayerMask enemiesLayerMask;
-        public float radius;
+    public CustomPathPoints customP;
 
-
-        
-
-        [Range(0, 10)]
-        public float lerpSpeed;
-    }
-    public CustomPoints customP;
-
+    float collisionBox_size = 0.5f;
     
     private int objectiveNumb;
     
@@ -47,9 +49,9 @@ public class Enemy : MonoBehaviour {
         transform.position = transform.position + transform.up * speed * Time.deltaTime;
         
         //tipologia movimento = punti custom
-        if(patTypes == PatternType.CustomPoints)
+        if(patTypes == PatternType.CustomPathPoints)
         {
-            CustomPointsType();
+            CustomPathPointsType();
         }
         if(patTypes == PatternType.StraightDown)
         {
@@ -69,14 +71,16 @@ public class Enemy : MonoBehaviour {
 
     }
 
-    private void CustomPointsType()
+    private void CustomPathPointsType()
     {
         //controllo raggiunta obbiettivo
-        if (Physics2D.OverlapCircle(customP.patternPoints[objectiveNumb], customP.radius, customP.enemiesLayerMask))
+
+
+        if(transform.position.x < this.customP.patternPathPoints[objectiveNumb].x + collisionBox_size && transform.position.x > this.customP.patternPathPoints[objectiveNumb].x - collisionBox_size)
         {
-            if (objectiveNumb != customP.patternPoints.Length - 1)
+            if (this.objectiveNumb != this.customP.patternPathPoints.Length - 1)
             {
-                objectiveNumb++;
+                this.objectiveNumb++;
             }
             else
             {
@@ -84,10 +88,16 @@ public class Enemy : MonoBehaviour {
             }
         }
 
+
+
+        //if (Physics2D.OverlapCircle(this.customP.patternPathPoints[objectiveNumb], this.customP.radius, this.customP.enemiesLayerMask))
+        //{
+        //}
+
         //quando ha completato lista obbiettivi continua dritto, altrimenti ruota verso obbiettivo
         if (!listFinished)
         {
-            Vector3 objDir = customP.patternPoints[objectiveNumb] - transform.position;
+            Vector3 objDir = customP.patternPathPoints[objectiveNumb] - transform.position;
             float angle = Mathf.Atan2(objDir.y, objDir.x) * Mathf.Rad2Deg - 90;
             //transform.rotation = Quaternion.Euler(0, 0, angle);
 
@@ -116,29 +126,29 @@ public class Enemy : MonoBehaviour {
     //visualizzazione
     private void OnDrawGizmosSelected()
     {
-        if(patTypes == PatternType.CustomPoints)
+        if(patTypes == PatternType.CustomPathPoints)
         {
-            VisualyzeCustomPointsMode();
+            VisualyzeCustomPathPointsMode();
         }
     }
 
     //visualizzazione modalità punti custom
-    private void VisualyzeCustomPointsMode()
+    private void VisualyzeCustomPathPointsMode()
     {
-        if (customP.patternPoints.Length > 0)
+        if (customP.patternPathPoints.Length > 0)
         {
             Gizmos.color = Color.green;
-            for (int i = 0; i < customP.patternPoints.Length; i++)
+            for (int i = 0; i < customP.patternPathPoints.Length; i++)
             {
-                Gizmos.DrawSphere(customP.patternPoints[i], 0.5f);
+                Gizmos.DrawSphere(customP.patternPathPoints[i], 0.5f);
 
-                if (i < customP.patternPoints.Length - 1)
+                if (i < customP.patternPathPoints.Length - 1)
                 {
-                    Gizmos.DrawLine(customP.patternPoints[i], customP.patternPoints[i + 1]);
+                    Gizmos.DrawLine(customP.patternPathPoints[i], customP.patternPathPoints[i + 1]);
                 }
             }
 
-            Vector3 objDir = customP.patternPoints[objectiveNumb] - transform.position;
+            Vector3 objDir = customP.patternPathPoints[objectiveNumb] - transform.position;
             objDir.z = 0;
 
             Gizmos.color = Color.cyan;

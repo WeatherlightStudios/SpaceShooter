@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum spown_type {horizontal, vertialc }
+public enum spown_type {horizontal, vertical }
 
 
 [System.Serializable]
@@ -13,7 +13,7 @@ public class Wave
 
     public float enemy_number;
 
-    spown_type sp_type;
+    public spown_type sp_type;
 
     public float time_nextWave;
 

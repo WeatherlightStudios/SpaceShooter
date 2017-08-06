@@ -25,6 +25,8 @@ public class Bullet : MonoBehaviour {
 
         //pos = new Vector2(pos.x, pos.y + speed * Time.deltaTime);
 
+        speed += 100 * Time.deltaTime;
+
         transform.position = transform.position + transform.up * speed * Time.deltaTime;
 
         //rb.velocity = Vector3.up * speed * Time.deltaTime;
