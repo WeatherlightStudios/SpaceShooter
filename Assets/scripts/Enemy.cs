@@ -59,11 +59,12 @@ public class Enemy : MonoBehaviour
         }
 
         //distruzione se esce dal bordo sotto
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)) + Vector3.up * yAdjuster;
-        if (transform.position.y < min.y)
-        {
-            Destroy(gameObject);
-        }
+
+        //Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0)) + Vector3.up * yAdjuster;
+        //if (transform.position.y < min.y)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
     
     void StraightDownType()
@@ -121,6 +122,15 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
+        if(other.tag == "Player")
+        {
+            Destroy(other.gameObject);
+        }
+        if(other.tag == "DestroyZone")
+        {
+            Destroy(this.gameObject);
+        }
+
     }
 
     //visualizzazione
