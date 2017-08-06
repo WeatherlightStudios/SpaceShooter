@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PowerUpTypes : MonoBehaviour {
 
-    public enum PowerUp_Types {IncreaseFireRate,DiagonalBullets,Rockets}
+    public enum PowerUp_Types {IncreaseFireRate,DiagonalBullets,Rockets,MoreBullets}
     public PowerUp_Types puTypes;
     public float yAdjuster;
     public string playerTag;
     public GameObject player;
     public float fireRateIncrease;
+    public int maxBulletNumb;
 
     void Start()
     {
@@ -43,6 +44,10 @@ public class PowerUpTypes : MonoBehaviour {
             {
                 AddRockets();
             }
+            if (puTypes == PowerUp_Types.MoreBullets)
+            {
+                AddBullets();
+            }
 
             Destroy(this.gameObject);
         }
@@ -51,6 +56,16 @@ public class PowerUpTypes : MonoBehaviour {
     void IncreaseFireRate()
     {
         player.GetComponent<Player>().bullets.fireRate -= fireRateIncrease;
+    }
+
+    void AddBullets()
+    {
+        int bulletNumb = player.GetComponent<Player>().bullets.bulletNumber;
+
+        if(bulletNumb < maxBulletNumb)
+        {
+            player.GetComponent<Player>().bullets.bulletNumber++;
+        }
     }
 
     void AddDiagonalBullets()

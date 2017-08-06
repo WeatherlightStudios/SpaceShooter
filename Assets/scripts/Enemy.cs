@@ -115,7 +115,7 @@ public class Enemy : MonoBehaviour
 
             if(randomNumb < dropPercent)
             {
-                int randomObject = Random.Range(0, powerUps.Length - 1);
+                int randomObject = Random.Range(0, powerUps.Length);
                 Instantiate(powerUps[randomObject], transform.position, transform.rotation);
             }
 
