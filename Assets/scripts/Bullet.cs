@@ -16,7 +16,8 @@ public class Bullet : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        //per ora tienilo, può servire
+        //Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
         Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
 
 
@@ -24,7 +25,9 @@ public class Bullet : MonoBehaviour {
 
         //pos = new Vector2(pos.x, pos.y + speed * Time.deltaTime);
 
-        transform.position = transform.position + Vector3.up * speed * Time.deltaTime;
+        speed += 100 * Time.deltaTime;
+
+        transform.position = transform.position + transform.up * speed * Time.deltaTime;
 
         //rb.velocity = Vector3.up * speed * Time.deltaTime;
 
