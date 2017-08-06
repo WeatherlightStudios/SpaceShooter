@@ -8,13 +8,11 @@ public struct CustomPathPoints
     public Vector3[] patternPathPoints;
     public LayerMask enemiesLayerMask;
     public float radius;
-
-
-        
-
+    
     [Range(0, 10)]
     public float lerpSpeed;
 }
+
 public class Enemy : MonoBehaviour
 {
 	
@@ -26,9 +24,12 @@ public class Enemy : MonoBehaviour
     [Range(0,100)]
     public int dropPercent;
     public float yAdjuster;
-    public GameObject[] powerUps;
-
+    public GameObject powerUp;
+    
     public CustomPathPoints customP;
+    
+
+
 
     float collisionBox_size = 0.5f;
     
@@ -115,8 +116,7 @@ public class Enemy : MonoBehaviour
 
             if(randomNumb < dropPercent)
             {
-                int randomObject = Random.Range(0, powerUps.Length);
-                Instantiate(powerUps[randomObject], transform.position, transform.rotation);
+                Instantiate(powerUp, transform.position, transform.rotation);
             }
 
             Destroy(other.gameObject);
@@ -165,4 +165,7 @@ public class Enemy : MonoBehaviour
             Gizmos.DrawLine(transform.position, transform.position + objDir);
         }
     }
+
+
+
 }
