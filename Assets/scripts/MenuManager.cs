@@ -9,8 +9,20 @@ public class MenuManager : MonoBehaviour {
         UnityEngine.SceneManagement.SceneManager.LoadScene("EndlessMode");
     }
 
+    public void PlayHangar()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Hangar_Scene");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
     }
+
+    public void MainMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+
 }
