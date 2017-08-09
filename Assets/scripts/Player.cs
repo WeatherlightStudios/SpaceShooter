@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public float speed;
     public float anim_move;
 
+    public float score;
     
     [System.Serializable]
     public class CustomizeBullets

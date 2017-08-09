@@ -25,7 +25,10 @@ public class Enemy : MonoBehaviour
     public int dropPercent;
     public float yAdjuster;
     public GameObject powerUp;
-    
+
+
+    public float score;
+
     public CustomPathPoints customP;
 
     public GameObject explosionParticle;
@@ -117,6 +120,12 @@ public class Enemy : MonoBehaviour
             if(randomNumb < dropPercent)
             {
                 Instantiate(powerUp, transform.position, transform.rotation);
+            }
+
+            GameObject player = GameObject.Find("Player");
+            if(player != null)
+            {
+                player.GetComponent<Player>().score += score;
             }
 
             Destroy(other.gameObject);
