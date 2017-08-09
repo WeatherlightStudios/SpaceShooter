@@ -27,8 +27,8 @@ public class Enemy : MonoBehaviour
     public GameObject powerUp;
     
     public CustomPathPoints customP;
-    
 
+    public GameObject explosionParticle;
 
 
     float collisionBox_size = 0.5f;
@@ -124,6 +124,7 @@ public class Enemy : MonoBehaviour
         }
         if(other.tag == "Player")
         {
+            Instantiate(explosionParticle,other.transform.position,Quaternion.Euler(Vector3.zero));
             Destroy(other.gameObject);
         }
         if(other.tag == "DestroyZone")
